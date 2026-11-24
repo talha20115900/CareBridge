@@ -1,0 +1,23 @@
+services:
+  app:
+    environment:
+      SECURE_COOKIE: "true"
+      AI_DEMO_CODE: ${AI_DEMO_CODE:?Set a private AI_DEMO_CODE in .env}
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?Set SITE_DOMAIN in .env}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
